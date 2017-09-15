@@ -1,0 +1,19 @@
+1.click start game
+2.creat user's block and food's block
+3.user move (the velocity is constant -- temporary)
+	if click up --movetop
+	elsif click down --movebot
+	elsif click left --moveleft
+	elsif click right --moveright
+4.when user move
+	if eat food
+		speedup
+		creat new food
+		the point increase
+		the body larger
+	if the body at same position
+		show the gameover screen
+		show the score
+		all the action stop
+5.click game
+6.clikc start game
