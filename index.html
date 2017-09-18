@@ -1,29 +1,30 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<meta charset="UTF-8">
-	<title>snake2</title>
-	<script
+  <meta charset="UTF-8">
+  <title>snake2</title>
+  <script
   src="https://code.jquery.com/jquery-3.2.1.min.js"
   integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
   crossorigin="anonymous"></script>
 
-  	<script>
-  		$(function(){
-  			var body = $('body'),
+    <script>
+      $(function(){
+        var body = $('body'),
             desk = $('.desk'),
-    				user,
+            user,
             user_st_x = 200,
             user_st_y = 300,
-            user_x,user_y,timer,
-            speed = 300,
-    				user_body = $('user_body');
+            user_x,user_y,food_x,food_y,timer,
+            body_length=1,
+            speed = 250,
+            user_body=[];
         //開始遊戲
-  			function start_game(){
-  				desk.append('<div class="start">start game </div>');
-  				body.click(function() {
-  					/* Act on the event */
-  					desk.find('.start').remove();
+        function start_game(){
+          desk.append('<div class="start">start game </div>');
+          body.click(function() {
+            /* Act on the event */
+            desk.find('.start').remove();
             body.unbind('click');
             desk.append('<div class="user"></div>');
             desk.find($(".user")).css({
@@ -36,13 +37,13 @@
             cre_food();//產生food
             timer = setInterval(move_top, speed);//預設向上移動
             $(window).keydown(control);//按鍵控制
-  				});
-  			}
+          });
+        }
         //隨機產生食物
         function cre_food(){
           desk.append('<div class="food"></div>')
-          var food_x = Math.floor(Math.random()*40)*10,
-              food_y = Math.floor(Math.random()*60)*10;
+          food_x = Math.floor(Math.random()*40)*10,
+          food_y = Math.floor(Math.random()*60)*10;
           desk.find($(".food")).css({
             top: food_y,
             left: food_x
@@ -53,21 +54,29 @@
           user_y -= 10;
           user.css('top', user_y +"px");
           $(window).keydown(control);
+          eat_food();
+          body_control();
         }
         //user 向下移動
         function move_bot(){
           user_y += 10;
           user.css('top', user_y +"px");
+          eat_food();
+          body_control();
         }
         //user 向左移動
         function move_left(){
           user_x -= 10;
           user.css('left', user_x +"px");
+          eat_food();
+          body_control();
         }
         //user 向右移動
         function move_right(){
           user_x += 10;
           user.css('left', user_x +"px");
+          eat_food();
+          body_control();
         }
         //user按鍵控制
         function control(event){
@@ -88,63 +97,90 @@
             timer = setInterval(move_right ,  speed);
           }
         }
-  			start_game();
-  		})
-  	</script>
-  	<style type="text/css">
-  	.desk {
-  		background: black;
-  		width: 400px;
-  		height: 600px;
-  		position: relative;
-  		overflow: hidden;
-  	}
-  	.user {
-  		background: yellow;
-  		width: 10px;
-  		height: 10px;
-  		position: absolute;
-  	}
-  	.user_body {
-  		background: yellow;
-  		width: 10px;
-  		height: 10px;
-  		position: absolute;
-  	}
-  	.food{
-  		background: red;
-  		width: 10px;
-  		height: 10px;
-  		position: absolute;
-  	}
-  	.game_over{
-  		font-size: 80px;
-  		opacity: 0.5;
-  		background-color: black;
-  		text-align: center;
-  		line-height: 600px;
-  		width: 400px;
-  		height: 600px;
-  		z-index: 1;
-  		color:red;
-  	}
-  	.start{
-  		font-size: 80px;
-  		opacity: 0.5;
-  		background-color: black;
-  		text-align: center;
-  		line-height: 600px;
-  		width: 400px;
-  		height: 600px;
-  		z-index: 1;
-  		color:red;
-  	}
+        //吃到食物
+        function eat_food(){
+          if(food_x==user_x &&food_y==user_y){
+            desk.append('<div class="user_body"></div>');
+            user_body.push([food_x,food_y]);
+            body_length +=1
+            cre_food();
+            speed -= 10;
+          }
+        }
+        //增加身體長度
+        function body_control(){
+          user_body.splice(0,0,[user_x,user_y]);
+          user_body.length = body_length;
+          var body_tem = desk.find(".user_body");
+          body_tem.splice(0,0,"");                         //因為吃下第一個，會與頭重疊，故在最前面增加一個空元素，解決此問題
+            for(i=1;i<body_length;i++){
+              $(body_tem[i]).css({
+                left: user_body[i][0],
+                top: user_body[i][1]
+              });
+            }
+        }
+        //遊戲結束
+
+        start_game();
+      })
+    </script>
+    <style type="text/css">
+    .desk {
+      background: black;
+      width: 400px;
+      height: 600px;
+      position: relative;
+      overflow: hidden;
+    }
+    .user {
+      background: yellow;
+      width: 10px;
+      height: 10px;
+      position: absolute;
+      border-radius: 5px;
+    }
+    .user_body {
+      background: yellow;
+      width: 10px;
+      height: 10px;
+      position: absolute;
+      border-radius: 2px;
+    }
+    .food{
+      background: red;
+      width: 10px;
+      height: 10px;
+      position: absolute;
+    }
+    .game_over{
+      font-size: 80px;
+      opacity: 0.5;
+      background-color: black;
+      text-align: center;
+      line-height: 600px;
+      width: 400px;
+      height: 600px;
+      z-index: 1;
+      color:red;
+    }
+    .start{
+      font-size: 80px;
+      opacity: 0.5;
+      background-color: black;
+      text-align: center;
+      line-height: 600px;
+      width: 400px;
+      height: 600px;
+      z-index: 1;
+      color:red;
+    }
   </style>
 </head>
 <body>
-	<div class="desk">
+  <div class="desk">
 
-	</div>
-	
+  </div>
+  
 </body>
 </html>
