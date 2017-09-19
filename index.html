@@ -15,7 +15,7 @@
             user,
             user_st_x = 200,
             user_st_y = 300,
-            user_x,user_y,food_x,food_y,timer,
+            user_x,user_y,food_x,food_y,timer,score,
             body_length=1,
             speed = 250,
             user_body=[];
@@ -56,6 +56,7 @@
           $(window).keydown(control);
           eat_food();
           body_control();
+          end_game_y();
         }
         //user 向下移動
         function move_bot(){
@@ -63,6 +64,7 @@
           user.css('top', user_y +"px");
           eat_food();
           body_control();
+          end_game_y();
         }
         //user 向左移動
         function move_left(){
@@ -70,6 +72,7 @@
           user.css('left', user_x +"px");
           eat_food();
           body_control();
+          end_game_x();
         }
         //user 向右移動
         function move_right(){
@@ -77,6 +80,7 @@
           user.css('left', user_x +"px");
           eat_food();
           body_control();
+          end_game_x();
         }
         //user按鍵控制
         function control(event){
@@ -94,7 +98,7 @@
           } 
           else if(event.keyCode == 39){             //right
             clearInterval(timer);
-            timer = setInterval(move_right ,  speed);
+            timer = setInterval(move_right, speed);
           }
         }
         //吃到食物
@@ -104,7 +108,7 @@
             user_body.push([food_x,food_y]);
             body_length +=1
             cre_food();
-            speed -= 10;
+            speed -= 15;
           }
         }
         //增加身體長度
@@ -121,7 +125,54 @@
             }
         }
         //遊戲結束
-
+        function end_game_x(){
+          if(user_x < 0 || user_x >390  ){
+            clearInterval(timer);                                  //停止移動
+            desk.append('<div Class="game_over">You Lose</div>');          //出現結束畫面
+            $(window).unbind("keydown",control);
+            restart_game();
+          }
+          for(i=1 ; i<body_length;i++){
+            var tem_x = user_body[i][0],
+                tem_y = user_body[i][1];
+            if ( tem_x == user_x && tem_y == user_y) {
+              clearInterval(timer);                                  //停止移動
+              desk.append('<div Class="game_over">You Lose</div>');          //出現結束畫面
+              $(window).unbind("keydown",control);
+              restart_game();
+            } 
+          }
+        }
+         function end_game_y(){
+          if(user_y < 0 || user_y >590){
+            clearInterval(timer);                                  //停止移動
+            desk.append('<div Class="game_over">You Lose</div>');          //出現結束畫面
+            $(window).unbind("keydown",control);
+            restart_game();
+          }
+          for(i=1 ; i<body_length;i++){                                  // head 撞到第一個body 不會死掉....怎麼改0.0
+            var tem_x = user_body[i][0],
+                tem_y = user_body[i][1];
+            if ( tem_x == user_x && tem_y == user_y) {
+              clearInterval(timer);                                  //停止移動
+              desk.append('<div Class="game_over"> Restart </div>');          //出現結束畫面
+              $(window).unbind("keydown",control);
+              restart_game();
+            }
+          }
+        }
+        //重新開始遊戲
+        function restart_game(){
+          desk.click(function(event) {
+            desk.find('.user_body').remove();
+            desk.find('.game_over').remove();
+            desk.unbind('click');
+            body_length=1,score=0,                                //初始化
+            speed = 250,
+            user_body=[];
+            start_game();
+          });
+        }
         start_game();
       })
     </script>
@@ -145,7 +196,7 @@
       width: 10px;
       height: 10px;
       position: absolute;
-      border-radius: 2px;
+      border-radius: 3px;
     }
     .food{
       background: red;
@@ -179,7 +230,7 @@
 </head>
 <body>
   <div class="desk">
-
+    
   </div>
   
 </body>
