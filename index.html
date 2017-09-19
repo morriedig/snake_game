@@ -12,10 +12,11 @@
       $(function(){
         var body = $('body'),
             desk = $('.desk'),
+            score = $('.score'),
             user,
             user_st_x = 200,
             user_st_y = 300,
-            user_x,user_y,food_x,food_y,timer,score,
+            user_x,user_y,food_x,food_y,timer,score_num=00000,
             body_length=1,
             speed = 250,
             user_body=[];
@@ -26,6 +27,7 @@
             /* Act on the event */
             desk.find('.start').remove();
             body.unbind('click');
+            score.html(score_num);
             desk.append('<div class="user"></div>');
             desk.find($(".user")).css({
               top: user_st_y,
@@ -37,6 +39,7 @@
             cre_food();//產生food
             timer = setInterval(move_top, speed);//預設向上移動
             $(window).keydown(control);//按鍵控制
+ 
           });
         }
         //隨機產生食物
@@ -108,7 +111,19 @@
             user_body.push([food_x,food_y]);
             body_length +=1
             cre_food();
-            speed -= 15;
+            if(speed > 80 ){
+              speed -= 20;
+              score_num = score_num + 20 + speed*body_length;
+            } else if (speed > 40 ){
+              speed -= 5
+              score_num = score_num + 30 + speed*body_length*2;
+            } else if(speed > 19){
+              speed -= 3
+              score_num = score_num + 40 + speed*body_length*3;
+            } else{
+              score_num = score_num + 20 + speed*body_length*5;
+            }
+            score.html(score_num);
           }
         }
         //增加身體長度
@@ -167,7 +182,7 @@
             desk.find('.user_body').remove();
             desk.find('.game_over').remove();
             desk.unbind('click');
-            body_length=1,score=0,                                //初始化
+            body_length=1,score_num= 0000000000 ,                              //初始化
             speed = 250,
             user_body=[];
             start_game();
@@ -183,6 +198,15 @@
       height: 600px;
       position: relative;
       overflow: hidden;
+    }
+    .score{
+      color:yellow;
+      position: absolute;
+      font-size: 30px;
+      opacity: 0.7;
+      top:5px;
+      left: 15px;
+      z-index: 100;
     }
     .user {
       background: yellow;
@@ -230,7 +254,7 @@
 </head>
 <body>
   <div class="desk">
-    
+    <div class="score"></div>
   </div>
   
 </body>
