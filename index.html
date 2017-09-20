@@ -15,7 +15,7 @@
             score = $('.score'),
             user,
             user_st_x = 200,
-            user_st_y = 300,
+            user_st_y = 200,
             user_x,user_y,food_x,food_y,timer,score_num=00000,
             body_length=1,
             speed = 250,
@@ -45,8 +45,8 @@
         //隨機產生食物
         function cre_food(){
           desk.append('<div class="food"></div>')
-          food_x = Math.floor(Math.random()*40)*10,
-          food_y = Math.floor(Math.random()*60)*10;
+          food_x = Math.floor(Math.random()*60)*10,
+          food_y = Math.floor(Math.random()*40)*10;
           desk.find($(".food")).css({
             top: food_y,
             left: food_x
@@ -141,7 +141,7 @@
         }
         //遊戲結束
         function end_game_x(){
-          if(user_x < 0 || user_x >390  ){
+          if(user_x < 0 || user_x >590  ){
             clearInterval(timer);                                  //停止移動
             desk.append('<div Class="game_over">You Lose</div>');          //出現結束畫面
             $(window).unbind("keydown",control);
@@ -159,7 +159,7 @@
           }
         }
          function end_game_y(){
-          if(user_y < 0 || user_y >590){
+          if(user_y < 0 || user_y >390){
             clearInterval(timer);                                  //停止移動
             desk.append('<div Class="game_over">You Lose</div>');          //出現結束畫面
             $(window).unbind("keydown",control);
@@ -193,11 +193,15 @@
     </script>
     <style type="text/css">
     .desk {
-      background: black;
-      width: 400px;
-      height: 600px;
+      background: #093028;  /* fallback for old browsers */
+      background: -webkit-linear-gradient(to right, #237A57, #093028);  /* Chrome 10-25, Safari 5.1-6 */
+      background: linear-gradient(to right, #237A57, #093028); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+      width: 600px;
+      height: 400px;
       position: relative;
       overflow: hidden;
+      border:3px solid #008800;
+      margin: 110px auto;
     }
     .score{
       color:yellow;
@@ -209,33 +213,40 @@
       z-index: 100;
     }
     .user {
-      background: yellow;
+      background: #56ab2f;  /* fallback for old browsers */
+      background: -webkit-linear-gradient(to right, #a8e063, #56ab2f);  /* Chrome 10-25, Safari 5.1-6 */
+      background: linear-gradient(to right, #a8e063, #56ab2f); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
       width: 10px;
       height: 10px;
       position: absolute;
       border-radius: 5px;
     }
     .user_body {
-      background: yellow;
+      background: #56ab2f;  /* fallback for old browsers */
+      background: -webkit-linear-gradient(to right, #a8e063, #56ab2f);  /* Chrome 10-25, Safari 5.1-6 */
+      background: linear-gradient(to right, #a8e063, #56ab2f); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
       width: 10px;
       height: 10px;
       position: absolute;
       border-radius: 3px;
     }
     .food{
-      background: red;
+      background: #FDFC47;  /* fallback for old browsers */
+      background: -webkit-linear-gradient(to right, #24FE41, #FDFC47);  /* Chrome 10-25, Safari 5.1-6 */
+      background: linear-gradient(to right, #24FE41, #FDFC47); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
       width: 10px;
       height: 10px;
       position: absolute;
+      border-radius: 4px;
     }
     .game_over{
       font-size: 80px;
       opacity: 0.5;
       background-color: black;
       text-align: center;
-      line-height: 600px;
-      width: 400px;
-      height: 600px;
+      line-height: 400px;
+      width: 600px;
+      height: 400px;
       z-index: 1;
       color:red;
     }
@@ -244,9 +255,9 @@
       opacity: 0.5;
       background-color: black;
       text-align: center;
-      line-height: 600px;
-      width: 400px;
-      height: 600px;
+      line-height: 400px;
+      width: 600px;
+      height: 400px;
       z-index: 1;
       color:red;
     }
