@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>snake_game(JS)</title>
+  <script>
+    //產生桌子
+    var x,y,food_x,food_y;
+    function create_block(class_name,width,height,color,position){
+      var block = document.createElement('div');
+      block.className = class_name ;
+      block.style.width = width + 'px';
+      block.style.height = height + 'px';
+      block.style.backgroundColor = color ;
+      block.style.position = position ;
+      block.style.margin = '100px auto';
+      block.style.overflow = 'hidden';
+      document.body.appendChild(block); 
+    }
+    //block出現
+    function create_user(class_name,width,height,color,position,y,x,opacity){
+      var block = document.createElement('div');
+      var desk = document.getElementsByClassName('desk')[0];
+      block.className = class_name ;
+      block.style.width = width + 'px';
+      block.style.height = height + 'px';
+      block.style.backgroundColor = color ;
+      block.style.position = position ;
+      block.style.top = y +"px" ;
+      block.style.left = x +"px";
+      block.style.opacity = opacity ;
+      desk.appendChild(block);
+    }
+    //點擊滑鼠左鑑後，開始
+    function start_game(){
+      var desk = document.getElementsByClassName('desk')[0];
+      desk.removeChild(desk.childNodes[0]);
+      //玩家出現
+      create_user("user","20","20","yellow","absolute","200","300");
+      //玩家控制移動方向
+      window.onkeydown = control ;
+      //隨機出現食物
+      create_food();
+    }
+    //鍵盤控制
+    function control(event){
+      var user = document.getElementsByClassName("user")[0];
+      if(event.keyCode == 38){                 //top
+        y = user.offsetTop;
+        user.style.top = y - 20 + "px" ;
+        eat_food(); 
+      } 
+      else if(event.keyCode == 40){            //bot
+        y = user.offsetTop;
+        user.style.top = y + 20 + "px" ;
+        eat_food(); 
+      } 
+      else if(event.keyCode == 37){            //left
+        x = user.offsetLeft;
+        user.style.left = x - 20 + "px" ; 
+        eat_food(); 
+      } 
+      else if(event.keyCode == 39){             //right
+        x = user.offsetLeft;
+        user.style.left = x + 20 + "px" ;
+        eat_food(); 
+        }
+      }
+    //隨機產生食物
+    function create_food(){
+      food_x = Math.floor(Math.random()*30)*20;
+      food_y = Math.floor(Math.random()*20)*20;
+      create_user("food", "20","20","red","absolute",food_y,food_x);
+    }
+    //當user跟food重疊
+    function eat_food(){
+      if((x==food_x)&&(y==food_y)){
+        create_food();
+      }
+    }
+    //身體
+  </script>
+
+</head>
+<body>
+  <script>
+    //遊戲桌
+    create_block("desk", "600", "400", "black", "relative");
+    //開始頁面，點擊後開始
+    create_user("start_game","600","400","black","absolute","0","0", "0.7");
+    document.getElementsByClassName("start_game")[0].onclick = function(){start_game()};
+  </script>
+
+</body>
+</html>
