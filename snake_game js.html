@@ -1,12 +1,11 @@
 <!DOCTYPE html>
-<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <title>snake_game(JS)</title>
   <script>
     //產生桌子
-    var x,y,food_x,food_y,timer,user,food_pos,body_len=1,body_array=[],user_body,speed=500;
+    var x,y,food_x,food_y,timer,user,food_pos,body_len=1,body_array=[[300,200]],user_body,speed=500,desk;
     function create_block(class_name,width,height,color,position){
       var block = document.createElement('div');
       block.className = class_name ;
@@ -16,12 +15,14 @@
       block.style.position = position ;
       block.style.margin = '100px auto';
       block.style.overflow = 'hidden';
+      block.style.color = "white" ;
+      block.style.fontSize = 36 + "px";
       document.body.appendChild(block); 
     }
     //block出現
     function create_user(class_name,width,height,color,position,y,x,opacity){
       var block = document.createElement('div');
-      var desk = document.getElementsByClassName('desk')[0];
+      desk = document.getElementsByClassName('desk')[0];
       block.className = class_name ;
       block.style.width = width + 'px';
       block.style.height = height + 'px';
@@ -30,11 +31,14 @@
       block.style.top = y +"px" ;
       block.style.left = x +"px";
       block.style.opacity = opacity ;
+      block.style.color = "white";
+      block.style.fontSize = 36 + "px";
+      block.style.textAlign = "center";
+      block.style.borderRadius = 10+"px";
       desk.appendChild(block);
     }
     //點擊滑鼠左鑑後，開始
     function start_game(){
-      var desk = document.getElementsByClassName('desk')[0];
       desk.removeChild(desk.childNodes[0]);
       //玩家出現
       create_user("user","20","20","yellow","absolute","200","300");
@@ -48,22 +52,41 @@
     }
     //鍵盤控制
     function control(event){
-      if(event.keyCode == 38){                 //top
-        clearInterval(timer);
-        timer = setInterval(move_top, speed); 
-      } 
-      else if(event.keyCode == 40){            //bot
-        clearInterval(timer);
-        timer = setInterval(move_bot, speed);
-      } 
-      else if(event.keyCode == 37){            //left
-        clearInterval(timer);
-        timer = setInterval(move_left, speed); 
-      } 
-      else if(event.keyCode == 39){             //right
-        clearInterval(timer);
-        timer = setInterval(move_right, speed);
+      switch (event.keyCode){
+        case 38 ://top
+          clearInterval(timer);
+          timer = setInterval(move_top, speed);
+          break;
+        case 40 ://bot
+          clearInterval(timer);
+          timer = setInterval(move_bot, speed);
+          break;
+        case 37 ://left
+          clearInterval(timer);
+          timer = setInterval(move_left, speed);
+          break;
+        case 39 ://right
+          clearInterval(timer);
+          timer = setInterval(move_right, speed);
+          break;
       }
+      //this is another try
+      // if(event.keyCode == 38){                 //top
+      //   clearInterval(timer);
+      //   timer = setInterval(move_top, speed); 
+      // } 
+      // else if(event.keyCode == 40){            //bot
+      //   clearInterval(timer);
+      //   timer = setInterval(move_bot, speed);
+      // } 
+      // else if(event.keyCode == 37){            //left
+      //   clearInterval(timer);
+      //   timer = setInterval(move_left, speed); 
+      // } 
+      // else if(event.keyCode == 39){             //right
+      //   clearInterval(timer);
+      //   timer = setInterval(move_right, speed);
+      // }
     }
     //方向控制
     //向上
@@ -122,9 +145,15 @@
         food_y = Math.floor(Math.random()*20)*20;
         food_pos.style.top = food_y + "px";
         food_pos.style.left = food_x +'px';
-        create_user("user_body","20","20","yellow","absolute",tem_food_y,tem_food_x);
+        create_user("user_body","20","20","yellow","absolute");  
         body_len += 1;
-        speed -=10;
+        if(speed > 80 ){
+          speed -= 20;
+        } else if (speed > 40 ){
+          speed -= 5
+        } else if(speed > 19){
+          speed -= 3
+        }
       }
     }
     //產生body
@@ -134,27 +163,29 @@
       body_array.length = body_len;
       user_body = document.getElementsByClassName('user_body');
       for(i= 0 ; i < body_len-1; i++){
-        user_body[i].style.left = body_array[i+1][0]+'px',
-        user_body[i].style.top = body_array[i+1][1]+'px';
         if((user_body[i].offsetLeft == tem_x)&&(user_body[i].offsetTop == tem_y)){
           game_over()
         }
+        user_body[i].style.left = body_array[i+1][0]+'px',
+        user_body[i].style.top = body_array[i+1][1]+'px';
+        
       }
     }
     //遊戲結束
     function game_over(){
       clearInterval(timer);
-      create_user("game_over","600","400","black","absolute",0,0,"0.8");
+      create_user("game_over","600","400","black","absolute",0,0,"0.5");
       window.onkeydown = null;
       document.getElementsByClassName("game_over")[0].onclick = function(){restart_game()};
+      document.getElementsByClassName('game_over')[0].innerText = "RESRART GAME(click to restart)";
+
     }
     //遊戲重新開始
     function restart_game(){
-      var desk = document.getElementsByClassName('desk')[0];
       while (desk.hasChildNodes()) {   
         desk.removeChild(desk.firstChild);
       }
-      body_len=1,body_array=[];
+      body_len=1,body_array=[],speed=500;
       create_user("start_game","600","400","black","absolute","0","0", "0.7");
       start_game();
     }
@@ -167,6 +198,7 @@
     create_block("desk", "600", "400", "black", "relative");
     //開始頁面，點擊後開始
     create_user("start_game","600","400","black","absolute","0","0", "0.7");
+    document.getElementsByClassName('start_game')[0].innerText = "SRART GAME(click to start)";
     document.getElementsByClassName("start_game")[0].onclick = function(){start_game()};
   </script>
 
